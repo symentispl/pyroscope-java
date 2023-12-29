@@ -105,14 +105,13 @@ public class PyroscopeAgent {
 
         public static class Builder {
             final Config config;
-            final ProfilerDelegate profiler;
+            ProfilerDelegate profiler;
             Exporter exporter;
             ProfilingScheduler scheduler;
             Logger logger;
 
             public Builder(Config config) {
                 this.config = config;
-                this.profiler = new AsyncProfilerDelegate(config);
             }
 
             public Builder setExporter(Exporter exporter) {
@@ -143,6 +142,9 @@ public class PyroscopeAgent {
                     } else {
                         scheduler = new SamplingProfilingScheduler(config, exporter, logger);
                     }
+                }
+                if (profiler == null) {
+                    profiler = ProfilerDelegate.create(config);
                 }
                 return new Options(this);
             }
